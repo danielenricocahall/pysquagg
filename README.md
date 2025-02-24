@@ -20,6 +20,8 @@ pysquagg_instance.blocks # will print [[1, 2], [3, 4], [5, 6], [7, 8]]
 ```
 # Performance Characteristics
 
+## Complexity
+
 | Operation | Time Complexity |
 |-----------|-----------------|
 | `query`   | `O($\sqrt{n}$)` |
@@ -28,13 +30,22 @@ pysquagg_instance.blocks # will print [[1, 2], [3, 4], [5, 6], [7, 8]]
 | `pop`     | `O(n) `         |
 | `sort`    | `O(n log n) `   |
 
+The main reason for other operations being linear in the worst case is the fact that when the collection is modified, the blocks and aggregates need to be recomputed when the square root of the size of the collection changes. Furthermore, as `PySquagg` is a subclass of list, some of these performance characteristics are inherent.
+## Benchmarks
+
+Some preliminary benchmarking can be conducted from scripts in the `benchmarks` directory. One highlight from comparing `query` to performing computations on the arbitrary slices (using `sum` as the aggregator function) is:
+
+| Operation | PySquagg (s) |  Naive (s) |
+|-----------|--------------|------------|
+| `query`   | 0.032        | 1.48      |
+
 
 # Constraints
 The aggregator functions need to be associative and commutative, and the data structure is not thread-safe.
 
 
-
-
+# TODO
+- [ ] Identify if we can reduce the runtime of some operations to be sublinear
 
 
 > 💡 Interested in contributing? Check out the [Local Development & Contributions Guide](https://github.com/danielenricocahall/pysquagg/blob/main/CONTRIBUTING.md).

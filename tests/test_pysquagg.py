@@ -32,17 +32,18 @@ def test_insert_block_size_changes():
 
 
 def test_reverse():
-    pysquagg = PySquagg([1, 2, 3, 4, 5, 6], aggregator_function=lambda x: x)
+    pysquagg = PySquagg([1, 2, 3, 4, 5, 6], aggregator_function=sum)
+    assert pysquagg.aggregated_values == [3, 7, 11]
     pysquagg.reverse()
-    assert pysquagg == [6, 5, 4, 3, 2, 1]
     assert pysquagg.blocks == [[6, 5], [4, 3], [2, 1]]
+    assert pysquagg.aggregated_values == [11, 7, 3]
 
 
-def test_aggregated_values_recomputed_on_blocks_change():
+def test_aggregated_values_recomputed_on_concat():
     pysquagg = PySquagg([1, 2, 3, 4], aggregator_function=sum)
     assert pysquagg.aggregated_values == [3, 7]
     pysquagg += [5, 6]
-    assert pysquagg.aggregated_values == [3, 7, 11]
+    assert pysquagg.aggregated_values == [3, 18]
 
 
 def test_compute_aggregate_whole_blocks():

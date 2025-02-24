@@ -1,4 +1,3 @@
-from functools import cached_property
 from math import sqrt, floor
 from typing import Any, Iterable, Callable
 
@@ -27,12 +26,20 @@ class PySquagg(list):
     @blocks.setter
     def blocks(self, blocks_):
         self._blocks = blocks_
-        if hasattr(self, "aggregated_values"):
-            del self.aggregated_values
+        if hasattr(self, "_aggregated_values"):
+            del self._aggregated_values
 
-    @cached_property
+    @property
     def aggregated_values(self):
-        return [self.aggregator_function(block) for block in self.blocks]
+        if not hasattr(self, "_aggregated_values"):
+            self.aggregated_values = [
+                self.aggregator_function(block) for block in self.blocks
+            ]
+        return self._aggregated_values
+
+    @aggregated_values.setter
+    def aggregated_values(self, values):
+        self._aggregated_values = values
 
     def compute_blocks(self):
         blocks = []
@@ -48,6 +55,7 @@ class PySquagg(list):
             self.blocks = self.compute_blocks()
         else:
             self.blocks[-1].append(__object)
+            self.aggregated_values[-1] = self.aggregator_function(self.blocks[-1])
 
     def insert(self, __index, __object):
         block_size = self.block_size
@@ -79,7 +87,16 @@ class PySquagg(list):
         return PySquagg(super().__add__(other), self.aggregator_function)
 
     def __iadd__(self, other):
-        return PySquagg(super().__iadd__(other), self.aggregator_function)
+        if isinstance(other, list):
+            block_size = self.block_size
+            super().__iadd__(other)
+            new_block_size = self.block_size
+            if new_block_size != block_size:
+                self.blocks = self.compute_blocks()
+            else:
+                self.blocks[-1] += other
+                self.aggregated_values[-1] = self.aggregator_function(self.blocks[-1])
+            return self
 
     def query(self, left: int, right: int):
         if right - left <= 0:
