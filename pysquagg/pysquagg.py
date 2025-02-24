@@ -82,11 +82,24 @@ class PySquagg(list):
             self.blocks = self.compute_blocks()
         else:
             if len(self.blocks[-1]) < self.block_size:
-                self.blocks[-1] += __iterable
+                index = self.block_size - len(self.blocks[-1])
+                self.blocks[-1] += __iterable[:index]
                 self.aggregated_values[-1] = self.aggregator_function(self.blocks[-1])
+                remaining_iterable = __iterable[index:]
+                if remaining_iterable:
+                    self.__extend_blocks(remaining_iterable)
             else:
-                self.blocks.append(__iterable)
-                self.aggregated_values.append(self.aggregator_function(__iterable))
+                self.__extend_blocks(__iterable)
+
+    def __extend_blocks(self, iterable):
+        new_blocks = [
+            iterable[i : i + self.block_size]
+            for i in range(0, len(iterable), self.block_size)
+        ]
+        self.blocks.extend(new_blocks)
+        self.aggregated_values += [
+            self.aggregator_function(block) for block in new_blocks
+        ]
 
     def pop(self, __index=-1):
         block_size = self.block_size
@@ -114,10 +127,8 @@ class PySquagg(list):
         return PySquagg(super().__add__(other), self.aggregator_function)
 
     def __iadd__(self, other):
-        if isinstance(other, list):
-            super().__iadd__(other)
-            self.extend(other)
-            return self
+        self.extend(other)
+        return self
 
     def query(self, left: int, right: int):
         if right - left <= 0:

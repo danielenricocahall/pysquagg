@@ -22,13 +22,13 @@ pysquagg_instance.blocks # will print [[1, 2], [3, 4], [5, 6], [7, 8]]
 
 ## Complexity
 
-| Operation | Time Complexity |
-|-----------|-----------------|
-| `query`   | `O($\sqrt{n}$)` |
-| `append`  | `O(n)`          |
-| `insert`  | `O(n) `         |
-| `pop`     | `O(n) `         |
-| `sort`    | `O(n log n) `   |
+| Operation | Average Case Time Complexity | Worst Case Time Complexity |
+|-----------|----------------------------|----------------------------|
+| `query`   | `O($\sqrt{n}$)`            | `O($\sqrt{n}$)`            |
+| `append`  | `O($\sqrt{n}$)`            | `O(n)`                     |
+| `insert`  | `O(n) `                    | `O(n)`                     |
+| `pop`     | `O(n) `                    | `O(n)`                     |
+| `extend` | `O($\sqrt{n + m}$)`         | `O(n + m)`                 |
 
 The main reason for other operations being linear in the worst case is the fact that when the collection is modified, the blocks and aggregates need to be recomputed when the square root of the size of the collection changes. Furthermore, as `PySquagg` is a subclass of list, some of these performance characteristics are inherent.
 ## Benchmarks

@@ -40,11 +40,24 @@ def test_reverse():
     assert pysquagg.aggregated_values == [11, 7, 3]
 
 
-def test_aggregated_values_recomputed_on_concat():
+def test_concat_finish_last_block():
+    pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
+    assert pysquagg.aggregated_values == [3, 7, 5]
+    pysquagg += [6]
+    assert pysquagg.aggregated_values == [3, 7, 11]
+
+
+def test_concat_add_new_blocks():
     pysquagg = PySquagg([1, 2, 3, 4], aggregator_function=sum)
     assert pysquagg.aggregated_values == [3, 7]
-    pysquagg += [5, 6]
-    assert pysquagg.aggregated_values == [3, 7, 11]
+    pysquagg += [5, 6, 7, 8]
+    assert pysquagg.aggregated_values == [3, 7, 11, 15]
+
+
+def test_blocks_and_agg_concat_finish_last_block_and_add_new_blocks():
+    pysquagg = PySquagg(list(range(10)), aggregator_function=sum)
+    pysquagg += [10, 11, 12, 13, 14]
+    assert pysquagg.aggregated_values == [3, 12, 21, 30, 39]
 
 
 def test_aggregated_values_recomputed_on_pop():
