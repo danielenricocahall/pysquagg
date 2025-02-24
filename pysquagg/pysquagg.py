@@ -74,6 +74,11 @@ class PySquagg(list):
         super().sort(key=key, reverse=reverse)
         self.compute_blocks()
 
+    def clear(self):
+        super().clear()
+        self.blocks = []
+        self.aggregated_values = []
+
     def pop(self, __index=-1):
         block_size = self.block_size
         super().pop(__index)
