@@ -47,25 +47,25 @@ def test_aggregated_values_recomputed_on_blocks_change():
 
 def test_compute_aggregate_whole_blocks():
     pysquagg = PySquagg([1, 2, 3, 4, 5, 6], aggregator_function=sum)
-    assert pysquagg.compute_aggregate(0, 5) == 21
+    assert pysquagg.query(0, 5) == 21
 
 
 def test_compute_aggregate_partial_blocks_left():
     pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
-    assert pysquagg.compute_aggregate(1, 5) == 15
+    assert pysquagg.query(1, 5) == 15
 
 
 def test_compute_aggregate_partial_blocks_right():
     pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
-    assert pysquagg.compute_aggregate(3, 7) == 25
+    assert pysquagg.query(3, 7) == 25
 
 
 def test_compute_aggregate_partial_blocks_both_sides():
     pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
-    assert pysquagg.compute_aggregate(1, 6) == 21
+    assert pysquagg.query(1, 6) == 21
 
 
 def test_compute_blocks_invalid_range():
     pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
     with pytest.raises(InvalidRangeException):
-        pysquagg.compute_aggregate(1, 0)
+        pysquagg.query(1, 0)

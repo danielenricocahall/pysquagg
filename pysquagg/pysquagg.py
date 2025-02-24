@@ -81,7 +81,7 @@ class PySquagg(list):
     def __iadd__(self, other):
         return PySquagg(super().__iadd__(other), self.aggregator_function)
 
-    def compute_aggregate(self, left: int, right: int):
+    def query(self, left: int, right: int):
         if right - left <= 0:
             raise InvalidRangeException(
                 f"Invalid range of {left} - {right}. Please supply a valid range!"
