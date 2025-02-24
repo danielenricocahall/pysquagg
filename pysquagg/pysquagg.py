@@ -45,7 +45,7 @@ class PySquagg(list):
         super().append(__object)
         new_block_size = self.block_size
         if new_block_size != block_size:
-            self._blocks = self.compute_blocks()
+            self.blocks = self.compute_blocks()
         else:
             self.blocks[-1].append(__object)
 
@@ -74,6 +74,12 @@ class PySquagg(list):
         super().reverse()
         self.blocks.reverse()
         self.blocks = [block[::-1] for block in self.blocks]
+
+    def __add__(self, other):
+        return PySquagg(super().__add__(other), self.aggregator_function)
+
+    def __iadd__(self, other):
+        return PySquagg(super().__iadd__(other), self.aggregator_function)
 
     def compute_aggregate(self, left: int, right: int):
         if right - left <= 0:
