@@ -72,7 +72,7 @@ class PySquagg(list):
 
     def sort(self, *, key=None, reverse=False):
         super().sort(key=key, reverse=reverse)
-        self.compute_blocks()
+        self.blocks = self.compute_blocks()
 
     def extend(self, __iterable):
         block_size = self.block_size

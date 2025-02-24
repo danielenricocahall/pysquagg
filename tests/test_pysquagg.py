@@ -93,6 +93,15 @@ def test_compute_blocks_invalid_range():
         pysquagg.query(1, 0)
 
 
+def test_sort():
+    pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
+    assert pysquagg.blocks == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    assert pysquagg.aggregated_values == [3, 12, 21]
+    pysquagg.sort(reverse=True)
+    assert pysquagg.blocks == [[8, 7, 6], [5, 4, 3], [2, 1, 0]]
+    assert pysquagg.aggregated_values == [21, 12, 3]
+
+
 def test_clear():
     pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
     pysquagg.clear()
