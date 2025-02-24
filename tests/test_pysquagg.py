@@ -78,3 +78,10 @@ def test_compute_blocks_invalid_range():
     pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
     with pytest.raises(InvalidRangeException):
         pysquagg.query(1, 0)
+
+
+def test_clear():
+    pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
+    pysquagg.clear()
+    assert pysquagg.blocks == []
+    assert pysquagg.aggregated_values == []
