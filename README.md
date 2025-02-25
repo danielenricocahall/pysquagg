@@ -38,12 +38,12 @@ pysquagg_instance.blocks # will print [[1, 2], [3, 4], [5, 6], [7, 8]] - block_s
 ## Complexity
 
 | Operation | Average Case Time Complexity | Worst Case Time Complexity |
-|-----------|-----------------------|-------------------------|
-| `query`   | O($\sqrt{n}$)         | O($\sqrt{n}$)           |
-| `append`  | O($\sqrt{n}$)         | `O(n)`                  |
-| `insert`  | `O(n) `               | `O(n)`                  |
-| `pop`     | `O(n) `               | `O(n)`                  |
-| `extend` | O($\sqrt{n + m}$)     | `O(n + m)`              |
+|-----------|------------------|----------------|
+| `query`   | O($\sqrt{n}$)    | O($\sqrt{n}$)  |
+| `append`  | O($\sqrt{n}$)    | O(n)           |
+| `insert`  | O(n)             | O(n)           |
+| `pop`     | O(n)             | O(n)           |
+| `extend` | O($\sqrt{n + m}$) | O(n + m)       |
 
 The main reason for other operations being linear in the worst case is the fact that when the collection is modified, the blocks and aggregates need to be recomputed when the square root of the size of the collection changes. Furthermore, as `PySquagg` is a subclass of list, some of these performance characteristics are inherent.
 ## Benchmarks
@@ -54,6 +54,7 @@ Some preliminary benchmarking can be conducted from scripts in the `benchmarks` 
 |-----------|--------------|------------|
 | `query`   | 0.032        | 1.48      |
 
+As derived from a 2023 Macbook Pro M2, 16GB RAM.
 
 # Constraints
 The aggregator functions need to be associative and commutative, and the data structure is not thread-safe.
@@ -61,6 +62,6 @@ The aggregator functions need to be associative and commutative, and the data st
 
 # TODO
 - [ ] Identify if we can reduce the runtime of some operations to be sublinear
-
+- [ ] Perform more extensive benchmarking
 
 > 💡 Interested in contributing? Check out the [Local Development & Contributions Guide](https://github.com/danielenricocahall/pysquagg/blob/main/CONTRIBUTING.md).
