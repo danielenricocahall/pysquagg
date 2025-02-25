@@ -29,6 +29,7 @@ build-backend = "hatchling.build"
 exclude = [
   "/.*",
   "/tests",
+    "/benchmarks",
     "README.md",
     "CONTRIBUTING.md"
 ]
