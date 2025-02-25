@@ -16,10 +16,11 @@ def test_append():
 
 
 def test_insert_no_change_to_block_size():
-    pysquagg = PySquagg([1, 2, 3, 5, 6, 7], aggregator_function=lambda x: x)
+    pysquagg = PySquagg([1, 2, 3, 5, 6, 7], aggregator_function=sum)
+    assert pysquagg.aggregated_values == [3, 8, 13]
     pysquagg.insert(3, 4)
     assert pysquagg.block_size == 2
-    assert pysquagg.blocks == [[1, 2], [3, 4, 5], [6, 7]]
+    assert pysquagg.blocks == [[1, 2], [3, 4], [5, 6], [7]]
 
 
 def test_insert_block_size_changes():

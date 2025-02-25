@@ -41,9 +41,10 @@ class PySquagg(list):
     def aggregated_values(self, values):
         self._aggregated_values = values
 
-    def compute_blocks(self):
+    def compute_blocks(self, start_index: int = 0):
         return [
-            self[i : i + self.block_size] for i in range(0, len(self), self.block_size)
+            self[i : i + self.block_size]
+            for i in range(start_index, len(self), self.block_size)
         ]
 
     def append(self, __object):
@@ -68,9 +69,12 @@ class PySquagg(list):
         else:
             block_index = __index // block_size
             self.blocks[block_index].insert(__index % block_size, __object)
-            self.aggregated_values[block_index] = self.aggregator_function(
-                self.blocks[block_index]
-            )
+            self.blocks[block_index:] = self.compute_blocks(block_index * block_size)
+            self.aggregated_values[block_index:] = [
+                self.aggregator_function(self.blocks[i])
+                for i in range(block_index, len(self.blocks) - 1)
+            ]
+            self.aggregated_values.append(self.aggregator_function(self.blocks[-1]))
 
     def sort(self, *, key=None, reverse=False):
         super().sort(key=key, reverse=reverse)
@@ -83,15 +87,11 @@ class PySquagg(list):
         if new_block_size != block_size:
             self.blocks = self.compute_blocks()
         else:
-            if len(self.blocks[-1]) < self.block_size:
-                index = self.block_size - len(self.blocks[-1])
+            if (index := self.block_size - len(self.blocks[-1])) > 0:
                 self.blocks[-1] += __iterable[:index]
                 self.aggregated_values[-1] = self.aggregator_function(self.blocks[-1])
-                remaining_iterable = __iterable[index:]
-                if remaining_iterable:
-                    self.__extend_blocks(remaining_iterable)
-            else:
-                self.__extend_blocks(__iterable)
+                __iterable = __iterable[index:]
+            self.__extend_blocks(__iterable)
 
     def __extend_blocks(self, iterable):
         new_blocks = [
