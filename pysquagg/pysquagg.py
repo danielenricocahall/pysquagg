@@ -125,8 +125,7 @@ class PySquagg(list):
 
     def reverse(self):
         super().reverse()
-        self.blocks.reverse()
-        self.blocks = [block[::-1] for block in self.blocks]
+        self.blocks = self.compute_blocks()
 
     def __add__(self, other):
         return PySquagg(super().__add__(other), self.aggregator_function)
