@@ -5,7 +5,7 @@
 The principles behind Mo's Algorithm is interesting and useful, but the implementation is a bit cumbersome. This library is intended to make it easier to use the algorithm in Python, plus introduce dynamic behavior, such that a collection can be modified after the data structure is created, and the corresponding blocks + aggregates are updated accordingly.
 
 # Details
-The list supplied is split into $\floor$\frac{n}{\sqrt{n}} blocks of size $\sqrt{n}$, and the aggregate (based on the supplied aggregation function) is computed for each block. When the`PySquagg` object is queried with a valid start and end index:
+The list supplied is split into $\left\lfloor \frac{n}{\left\lfloor \sqrt{n} \right\rfloor} \right\rfloor$ blocks of size $\sqrt{n}$, and the aggregate (based on the supplied aggregation function) is computed for each block. When the`PySquagg` object is queried with a valid start and end index:
 - Pre-computed aggregations for all blocks that are entirely within the range are collected
 - Elements not fully contained within a block are iterated over and the aggregation function is applied to them
 - The pre-computed aggregations and newly computed aggregations are combined and returned
