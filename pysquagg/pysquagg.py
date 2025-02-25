@@ -42,10 +42,9 @@ class PySquagg(list):
         self._aggregated_values = values
 
     def compute_blocks(self):
-        blocks = []
-        for i in range(0, len(self), self.block_size):
-            blocks.append(self[i : i + self.block_size])
-        return blocks
+        return [
+            self[i : i + self.block_size] for i in range(0, len(self), self.block_size)
+        ]
 
     def append(self, __object):
         block_size = self.block_size
@@ -54,7 +53,10 @@ class PySquagg(list):
         if new_block_size != block_size:
             self.blocks = self.compute_blocks()
         else:
-            self.blocks[-1].append(__object)
+            if len(self.blocks[-1]) < self.block_size:
+                self.blocks[-1].append(__object)
+            else:
+                self.blocks.append([__object])
             self.aggregated_values[-1] = self.aggregator_function(self.blocks[-1])
 
     def insert(self, __index, __object):

@@ -12,7 +12,7 @@ def test_append():
     pysquagg = PySquagg([1, 2, 3, 4], aggregator_function=lambda x: x)
     pysquagg.append(5)
     assert pysquagg.block_size == 2
-    assert pysquagg.blocks == [[1, 2], [3, 4, 5]]
+    assert pysquagg.blocks == [[1, 2], [3, 4], [5]]
 
 
 def test_insert_no_change_to_block_size():
