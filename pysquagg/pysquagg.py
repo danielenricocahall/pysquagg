@@ -125,7 +125,7 @@ class PySquagg(list):
         return self
 
     def query(self, left: int, right: int):
-        if right - left <= 0:
+        if right - left <= 0 or right > len(self) or left < 0:
             raise InvalidRangeException(
                 f"Invalid range of {left} - {right}. Please supply a valid range!"
             )
