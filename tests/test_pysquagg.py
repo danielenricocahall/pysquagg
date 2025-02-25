@@ -61,11 +61,19 @@ def test_blocks_and_agg_concat_finish_last_block_and_add_new_blocks():
     assert pysquagg.aggregated_values == [3, 12, 21, 30, 39]
 
 
-def test_aggregated_values_recomputed_on_pop():
+def test_pop_last_value():
     pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
     assert pysquagg.aggregated_values == [3, 7, 5]
     pysquagg.pop()
     assert pysquagg.aggregated_values == [3, 7]
+
+
+def test_pop_value():
+    pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
+    assert pysquagg.aggregated_values == [3, 7, 5]
+    pysquagg.pop(2)
+    assert pysquagg.blocks == [[1, 2], [4, 5]]
+    assert pysquagg.aggregated_values == [3, 9]
 
 
 def test_compute_aggregate_whole_blocks():

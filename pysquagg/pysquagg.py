@@ -108,9 +108,13 @@ class PySquagg(list):
                 del self.blocks[block_index]
                 del self.aggregated_values[block_index]
             else:
-                self.aggregated_values[block_index] = self.aggregator_function(
-                    self.blocks[block_index]
+                self.blocks[block_index:] = self.compute_blocks(
+                    block_index * block_size
                 )
+                self.aggregated_values[block_index:] = [
+                    self.aggregator_function(self.blocks[i])
+                    for i in range(block_index, len(self.blocks))
+                ]
 
     def reverse(self):
         super().reverse()
