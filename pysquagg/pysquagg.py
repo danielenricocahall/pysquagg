@@ -42,6 +42,8 @@ class PySquagg(list):
         self._aggregated_values = values
 
     def compute_blocks(self, start_index: int = 0):
+        if not self.block_size:
+            return []
         return [
             self[i : i + self.block_size]
             for i in range(start_index, len(self), self.block_size)

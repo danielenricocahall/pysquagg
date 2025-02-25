@@ -108,3 +108,9 @@ def test_clear():
     pysquagg.clear()
     assert pysquagg.blocks == []
     assert pysquagg.aggregated_values == []
+
+
+def test_empty_list():
+    pysquagg = PySquagg([], aggregator_function=sum)
+    assert pysquagg.blocks == []
+    assert pysquagg.aggregated_values == []
