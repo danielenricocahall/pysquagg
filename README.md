@@ -10,7 +10,7 @@ The list supplied is split into $\left\lfloor \frac{n}{\left\lfloor \sqrt{n} \ri
 - Elements not fully contained within a block are iterated over and the aggregation function is applied to them
 - The pre-computed aggregations and newly computed aggregations are combined and returned
 
-The end result is a `query` method that is $O(\sqrt{n})$, compared to $O(n)$ for a naive implementation.
+The end result is a `query` method that is O($\sqrt{n}$), compared to O(n) for a naive implementation.
 
 Additionally, the `PySquagg` object can be modified after creation (e.g; `append`, `extend`, `pop`), and the blocks are updated accordingly to always be of size $\sqrt{n}$. The aggregates are also computed on the updated blocks.
 
@@ -38,12 +38,12 @@ pysquagg_instance.blocks # will print [[1, 2], [3, 4], [5, 6], [7, 8]] - block_s
 ## Complexity
 
 | Operation | Average Case Time Complexity | Worst Case Time Complexity |
-|-----------|----------------------------|----------------------------|
-| `query`   | `O($\sqrt{n}$)`            | `O($\sqrt{n}$)`            |
-| `append`  | `O($\sqrt{n}$)`            | `O(n)`                     |
-| `insert`  | `O(n) `                    | `O(n)`                     |
-| `pop`     | `O(n) `                    | `O(n)`                     |
-| `extend` | `O($\sqrt{n + m}$)`         | `O(n + m)`                 |
+|-----------|-----------------------|-------------------------|
+| `query`   | O($\sqrt{n}$)         | O($\sqrt{n}$)           |
+| `append`  | O($\sqrt{n}$)         | `O(n)`                  |
+| `insert`  | `O(n) `               | `O(n)`                  |
+| `pop`     | `O(n) `               | `O(n)`                  |
+| `extend` | O($\sqrt{n + m}$)     | `O(n + m)`              |
 
 The main reason for other operations being linear in the worst case is the fact that when the collection is modified, the blocks and aggregates need to be recomputed when the square root of the size of the collection changes. Furthermore, as `PySquagg` is a subclass of list, some of these performance characteristics are inherent.
 ## Benchmarks
