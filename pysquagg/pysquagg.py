@@ -97,7 +97,7 @@ class PySquagg(list):
 
     def pop(self, __index=-1):
         block_size = self.block_size
-        super().pop(__index)
+        value = super().pop(__index)
         new_block_size = self.block_size
         if new_block_size != block_size:
             self.blocks = self.compute_blocks()
@@ -115,6 +115,13 @@ class PySquagg(list):
                     self.aggregator_function(self.blocks[i])
                     for i in range(block_index, len(self.blocks))
                 ]
+        return value
+
+    def remove(self, __value):
+        index = self.index(__value)
+        if index == -1:
+            raise ValueError(f"{__value} not in list")
+        self.pop(index)
 
     def reverse(self):
         super().reverse()

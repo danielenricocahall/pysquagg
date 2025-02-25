@@ -64,16 +64,32 @@ def test_blocks_and_agg_concat_finish_last_block_and_add_new_blocks():
 def test_pop_last_value():
     pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
     assert pysquagg.aggregated_values == [3, 7, 5]
-    pysquagg.pop()
+    val = pysquagg.pop()
+    assert val == 5
     assert pysquagg.aggregated_values == [3, 7]
 
 
 def test_pop_value():
     pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
     assert pysquagg.aggregated_values == [3, 7, 5]
-    pysquagg.pop(2)
+    val = pysquagg.pop(2)
+    assert val == 3
     assert pysquagg.blocks == [[1, 2], [4, 5]]
     assert pysquagg.aggregated_values == [3, 9]
+
+
+def test_remove():
+    pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
+    assert pysquagg.aggregated_values == [3, 7, 5]
+    pysquagg.remove(3)
+    assert pysquagg.blocks == [[1, 2], [4, 5]]
+    assert pysquagg.aggregated_values == [3, 9]
+
+
+def test_remove_element_not_present():
+    pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
+    with pytest.raises(ValueError):
+        pysquagg.remove(6)
 
 
 def test_compute_aggregate_whole_blocks():
