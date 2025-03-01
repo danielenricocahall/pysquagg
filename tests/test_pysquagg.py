@@ -1,3 +1,6 @@
+from functools import reduce
+from operator import mul
+
 import pytest
 from pysquagg.pysquagg import PySquagg, InvalidRangeException
 
@@ -139,3 +142,32 @@ def test_empty_list():
     pysquagg = PySquagg([], aggregator_function=sum)
     assert pysquagg.blocks == []
     assert pysquagg.aggregated_values == []
+
+
+def test_add_two_pysquagg_objects():
+    pysquagg1 = PySquagg([1, 2, 3], aggregator_function=sum)
+
+    def _mul(block):
+        return reduce(mul, block)
+
+    pysquagg2 = PySquagg([4, 5, 6], aggregator_function=_mul)
+    combined = pysquagg1 + pysquagg2
+    assert combined.blocks == [[1, 2], [3, 4], [5, 6]]
+    assert combined.aggregated_values == [(3, 2), (7, 12), (11, 30)]
+    result = combined.query(3, 5)
+    assert result == (18, 360)
+
+
+def test_add_multiple_pysquagg_objects_multiple():
+    pysquagg1 = PySquagg([1, 2, 3], aggregator_function=sum)
+
+    def _mul(block):
+        return reduce(mul, block)
+
+    pysquagg2 = PySquagg([4, 5, 6], aggregator_function=_mul)
+    pysquagg3 = PySquagg([7, 8, 9], aggregator_function=sum)
+    combined = pysquagg1 + pysquagg2 + pysquagg3
+    assert combined.blocks == [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    assert combined.aggregated_values == [(6, 6, 6), (15, 120, 15), (24, 504, 24)]
+    result = combined.query(3, 5)
+    assert result == (18, 360)
