@@ -33,6 +33,40 @@ pysquagg_instance.query(0, 8) # will print 45
 pysquagg_instance.pop()
 pysquagg_instance.blocks # will print [[1, 2], [3, 4], [5, 6], [7, 8]] - block_size has dropped down from 3 -> 2
 ```
+
+Additionally, you can supply a custom aggregator function, as long as it is associative and commutative:
+```python
+from operator import mul
+from functools import reduce
+from pysquagg.pysquagg import PySquagg
+
+def _mul(block):
+    return reduce(mul, block)
+pysquagg_instance = PySquagg([1, 2, 3, 4, 5, 6], aggregator_function=mul)
+pysquagg_instance.aggregated_values # will print [2, 12, 30]
+```
+
+We also support adding two `PySquagg` instances together - in this scenario, the elements in each `PySquagg` object are concatenated, and the aggregation functions are both performed:
+
+```python
+from operator import mul
+from functools import reduce
+from pysquagg.pysquagg import PySquagg
+
+pysquagg1 = PySquagg([1, 2, 3], aggregator_function=sum)
+
+def _mul(block):
+    return reduce(mul, block)
+
+pysquagg2 = PySquagg([4, 5, 6], aggregator_function=_mul)
+combined = pysquagg1 + pysquagg2
+assert combined.blocks == [[1, 2], [3, 4], [5, 6]]
+assert combined.aggregated_values == [(3, 2), (7, 12), (11, 30)]
+result = combined.query(2, 5)
+assert result == (18, 360)
+```
+
+However, the structure will start to get gnarly if you start to add more than two `PySquagg` instances together, as the aggregations will be tuples of tuples, etc.
 # Performance Characteristics
 
 ## Complexity
@@ -63,5 +97,6 @@ The aggregator functions need to be associative and commutative, and the data st
 # TODO
 - [ ] Identify if we can reduce the runtime of some operations to be sublinear
 - [ ] Perform more extensive benchmarking
+- [ ] Determine if we can simplify combining more than 2 `PySquagg` instances
 
 > 💡 Interested in contributing? Check out the [Local Development & Contributions Guide](https://github.com/danielenricocahall/pysquagg/blob/main/CONTRIBUTING.md).
