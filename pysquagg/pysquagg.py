@@ -128,23 +128,19 @@ class PySquagg(list):
         self.blocks = self.compute_blocks()
 
     def __add__(self, other):
-        if isinstance(other, PySquagg):
+        if not isinstance(other, PySquagg):
+            return PySquagg(super().__add__(other), self.aggregator_function)
 
-            def combined_aggregation(block):
-                if all(isinstance(x, tuple) for x in block):
-                    first, second = zip(*block)
-                    return self.aggregator_function(first), other.aggregator_function(
-                        second
-                    )
-                else:
-                    return self.aggregator_function(block), other.aggregator_function(
-                        block
-                    )
+        def combined_aggregation(block):
+            if all(isinstance(x, tuple) for x in block):
+                first, second = zip(*block)
+                return self.aggregator_function(first), other.aggregator_function(
+                    second
+                )
+            else:
+                return self.aggregator_function(block), other.aggregator_function(block)
 
-            aggregator_function = combined_aggregation
-        else:
-            aggregator_function = self.aggregator_function
-        return PySquagg(super().__add__(other), aggregator_function)
+        return PySquagg(super().__add__(other), combined_aggregation)
 
     def __iadd__(self, other):
         self.extend(other)
