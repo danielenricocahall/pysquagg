@@ -154,20 +154,20 @@ def test_add_two_pysquagg_objects():
     combined = pysquagg1 + pysquagg2
     assert combined.blocks == [[1, 2], [3, 4], [5, 6]]
     assert combined.aggregated_values == [(3, 2), (7, 12), (11, 30)]
-    result = combined.query(3, 5)
+    result = combined.query(2, 5)
     assert result == (18, 360)
 
 
 def test_add_multiple_pysquagg_objects_multiple():
-    pysquagg1 = PySquagg([1, 2, 3], aggregator_function=sum)
+    pysquagg1 = PySquagg([1, 2], aggregator_function=sum)
 
     def _mul(block):
         return reduce(mul, block)
 
-    pysquagg2 = PySquagg([4, 5, 6], aggregator_function=_mul)
-    pysquagg3 = PySquagg([7, 8, 9], aggregator_function=sum)
+    pysquagg2 = PySquagg([3, 4], aggregator_function=_mul)
+    pysquagg3 = PySquagg([5, 6], aggregator_function=sum)
     combined = pysquagg1 + pysquagg2 + pysquagg3
-    assert combined.blocks == [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    assert combined.aggregated_values == [(6, 6, 6), (15, 120, 15), (24, 504, 24)]
-    result = combined.query(3, 5)
-    assert result == (18, 360)
+    assert combined.blocks == [[1, 2], [3, 4], [5, 6]]
+    assert combined.aggregated_values == [((3, 2), 3), ((7, 12), 7), ((11, 30), 11)]
+    result = combined.query(2, 5)
+    assert result == ((18, 360), 18)

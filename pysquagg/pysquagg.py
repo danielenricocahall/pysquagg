@@ -132,13 +132,14 @@ class PySquagg(list):
 
             def combined_aggregation(block):
                 if all(isinstance(x, tuple) for x in block):
-                    foo, bar = zip(*block)
-                    return self.aggregator_function(foo), other.aggregator_function(bar)
+                    first, second = zip(*block)
+                    return self.aggregator_function(first), other.aggregator_function(
+                        second
+                    )
                 else:
-                    current_agg = self.aggregator_function(block)
-                    if isinstance(current_agg, tuple):
-                        return *current_agg, other.aggregator_function(block)
-                return self.aggregator_function(block), other.aggregator_function(block)
+                    return self.aggregator_function(block), other.aggregator_function(
+                        block
+                    )
 
             aggregator_function = combined_aggregation
         else:
