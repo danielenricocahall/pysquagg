@@ -144,6 +144,15 @@ def test_empty_list():
     assert pysquagg.aggregated_values == []
 
 
+def test_add_list():
+    pysquagg = PySquagg([1, 2, 3], aggregator_function=sum)
+    combined = pysquagg + [4, 5, 6]
+    assert combined.blocks == [[1, 2], [3, 4], [5, 6]]
+    assert combined.aggregated_values == [3, 7, 11]
+    result = combined.query(2, 5)
+    assert result == 18
+
+
 def test_add_two_pysquagg_objects():
     pysquagg1 = PySquagg([1, 2, 3], aggregator_function=sum)
 
