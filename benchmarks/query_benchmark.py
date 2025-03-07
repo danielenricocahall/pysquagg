@@ -3,10 +3,9 @@ import timeit
 
 from pysquagg.pysquagg import PySquagg
 
-aggregator_function = sum
 n = 100000
 data = list(range(n))
-ps = PySquagg(data, aggregator_function)
+ps = PySquagg(data, sum)
 
 num_queries = 10000
 queries = []
