@@ -1,7 +1,7 @@
 [project]
 name = "pysquagg"
-version = "0.0.0"
-description = "A simple library for performing Square Root Decomposition and Aggregation"
+version = "1.0.0"
+description = "A simple library for providing a Square Root Decomposition and Aggregation data structure"
 readme = "README.md"
 authors = [{ name="Daniel Cahall", email="danielenricocahall@gmail.com" }]
 requires-python = ">=3.10"
