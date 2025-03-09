@@ -129,6 +129,14 @@ class PySquagg(list):
         self.extend(other)
         return self
 
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value)
+        block_index = key // self.block_size
+        self.blocks[block_index][key % self.block_size] = value
+        self.aggregated_values[block_index] = self.aggregator_function(
+            self.blocks[block_index]
+        )
+
     def query(self, left: int, right: int):
         if right - left <= 0 or right > len(self) or left < 0:
             raise InvalidRangeException(

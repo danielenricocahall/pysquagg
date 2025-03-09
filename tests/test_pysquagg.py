@@ -129,6 +129,15 @@ def test_sort():
     assert pysquagg.aggregated_values == [21, 12, 3]
 
 
+def test_set_item():
+    pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
+    assert pysquagg.blocks == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    assert pysquagg.aggregated_values == [3, 12, 21]
+    pysquagg[3] = -1
+    assert pysquagg.blocks == [[0, 1, 2], [-1, 4, 5], [6, 7, 8]]
+    assert pysquagg.aggregated_values == [3, 8, 21]
+
+
 def test_clear():
     pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
     pysquagg.clear()
