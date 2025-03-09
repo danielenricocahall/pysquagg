@@ -131,11 +131,20 @@ class PySquagg(list):
 
     def __setitem__(self, key, value):
         super().__setitem__(key, value)
-        block_index = key // self.block_size
-        self.blocks[block_index][key % self.block_size] = value
-        self.aggregated_values[block_index] = self.aggregator_function(
-            self.blocks[block_index]
-        )
+        if isinstance(key, slice):
+            # TODO: for slice assignment we recompute all blocks - this can be optimized but
+            # requires more thought for all edge cases
+            self.blocks = self.compute_blocks()
+        else:
+            block_index = key // self.block_size
+            self.blocks[block_index][key % self.block_size] = value
+            self.aggregated_values[block_index] = self.aggregator_function(
+                self.blocks[block_index]
+            )
+
+    def __iter__(self):
+        for block, agg in zip(self.blocks, self.aggregated_values):
+            yield block, agg
 
     def query(self, left: int, right: int):
         if right - left <= 0 or right > len(self) or left < 0:

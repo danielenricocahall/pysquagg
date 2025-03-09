@@ -138,6 +138,42 @@ def test_set_item():
     assert pysquagg.aggregated_values == [3, 8, 21]
 
 
+def test_set_range_same_block():
+    pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
+    assert pysquagg.blocks == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    assert pysquagg.aggregated_values == [3, 12, 21]
+    pysquagg[3:6] = [-1, -2, -3]
+    assert pysquagg.blocks == [[0, 1, 2], [-1, -2, -3], [6, 7, 8]]
+    assert pysquagg.aggregated_values == [3, -6, 21]
+
+
+def test_set_range_across_blocks():
+    pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
+    assert pysquagg.blocks == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    assert pysquagg.aggregated_values == [3, 12, 21]
+    pysquagg[2:7] = [-1, -2, -3, -4, -5]
+    assert pysquagg.blocks == [[0, 1, -1], [-2, -3, -4], [-5, 7, 8]]
+    assert pysquagg.aggregated_values == [0, -9, 10]
+
+
+def test_set_range_extra_values():
+    pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
+    assert pysquagg.blocks == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    assert pysquagg.aggregated_values == [3, 12, 21]
+    pysquagg[3:6] = [-1, -2, -3, -4]
+    assert pysquagg.blocks == [[0, 1, 2], [-1, -2, -3], [-4, 6, 7], [8]]
+    assert pysquagg.aggregated_values == [3, -6, 9, 8]
+
+
+def test_set_range_fewer_values():
+    pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
+    assert pysquagg.blocks == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    assert pysquagg.aggregated_values == [3, 12, 21]
+    pysquagg[3:6] = [-1]
+    assert pysquagg.blocks == [[0, 1], [2, -1], [6, 7], [8]]
+    assert pysquagg.aggregated_values == [1, 1, 13, 8]
+
+
 def test_clear():
     pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
     pysquagg.clear()
@@ -149,3 +185,8 @@ def test_empty_list():
     pysquagg = PySquagg([], aggregator_function=sum)
     assert pysquagg.blocks == []
     assert pysquagg.aggregated_values == []
+
+
+def test_iter():
+    pysquagg = PySquagg([0, 1, 2, 3, 4, 5, 6, 7, 8], aggregator_function=sum)
+    assert list(iter(pysquagg)) == [([0, 1, 2], 3), ([3, 4, 5], 12), ([6, 7, 8], 21)]
