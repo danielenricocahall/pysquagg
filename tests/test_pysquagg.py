@@ -21,6 +21,7 @@ def test_insert_no_change_to_block_size():
     pysquagg.insert(3, 4)
     assert pysquagg.block_size == 2
     assert pysquagg.blocks == [[1, 2], [3, 4], [5, 6], [7]]
+    assert pysquagg.aggregated_values == [3, 7, 11, 7]
 
 
 def test_insert_block_size_changes():

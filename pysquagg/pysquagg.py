@@ -62,11 +62,9 @@ class PySquagg(list):
             block_index = __index // block_size
             self.blocks[block_index].insert(__index % block_size, __object)
             self.blocks[block_index:] = self.compute_blocks(block_index * block_size)
-            self.aggregated_values[block_index:] = [
-                self.aggregator_function(self.blocks[i])
-                for i in range(block_index, len(self.blocks) - 1)
-            ]
-            self.aggregated_values.append(self.aggregator_function(self.blocks[-1]))
+            self.aggregated_values[block_index:] = list(
+                map(self.aggregator_function, self.blocks[block_index:])
+            )
 
     def sort(self, *, key=None, reverse=False):
         super().sort(key=key, reverse=reverse)
@@ -109,10 +107,9 @@ class PySquagg(list):
                 self.blocks[block_index:] = self.compute_blocks(
                     block_index * block_size
                 )
-                self.aggregated_values[block_index:] = [
-                    self.aggregator_function(self.blocks[i])
-                    for i in range(block_index, len(self.blocks))
-                ]
+                self.aggregated_values[block_index:] = list(
+                    map(self.aggregator_function, self.blocks[block_index:])
+                )
         return value
 
     def remove(self, __value):
