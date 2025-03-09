@@ -91,9 +91,7 @@ class PySquagg(list):
             for i in range(0, len(iterable), self.block_size)
         ]
         self.blocks.extend(new_blocks)
-        self.aggregated_values += [
-            self.aggregator_function(block) for block in new_blocks
-        ]
+        self.aggregated_values.extend(map(self.aggregator_function, new_blocks))
 
     def pop(self, __index=-1):
         block_size = self.block_size
