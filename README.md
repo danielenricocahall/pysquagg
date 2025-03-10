@@ -63,5 +63,7 @@ The aggregator functions need to be associative and commutative, and the data st
 # TODO
 - [ ] Identify if we can reduce the runtime of some operations to be sublinear
 - [ ] Perform more extensive benchmarking
+- [ ] Incorporate a mechanism for combining aggregator functions, if someone adds two `PySquagg` objects
+- [ ] Add parallelization options (likely for 3.13+ with free-threading)
 
 > 💡 Interested in contributing? Check out the [Local Development & Contributions Guide](https://github.com/danielenricocahall/pysquagg/blob/main/CONTRIBUTING.md).
