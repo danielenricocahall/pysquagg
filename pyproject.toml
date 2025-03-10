@@ -1,6 +1,6 @@
 [project]
 name = "pysquagg"
-version = "0.0.0"
+version = "1.0.0"
 description = "A simple library for performing Square Root Decomposition and Aggregation"
 readme = "README.md"
 authors = [{ name="Daniel Cahall", email="danielenricocahall@gmail.com" }]
@@ -17,7 +17,7 @@ license-files = ["LICENSE"]
 dev = [
     "pre-commit>=4.1.0",
     "pytest>=8.3.4",
-    "ruff>=0.9.2",
+    "ruff>=0.9.5",
 ]
 
 
