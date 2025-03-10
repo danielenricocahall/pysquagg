@@ -79,6 +79,15 @@ def test_pop_value():
     assert pysquagg.aggregated_values == [3, 9]
 
 
+def test_pop_change_block_size():
+    pysquagg = PySquagg([1, 2, 3, 4, 5, 6, 7, 8, 9], aggregator_function=sum)
+    assert pysquagg.aggregated_values == [6, 15, 24]
+    val = pysquagg.pop(2)
+    assert val == 3
+    assert pysquagg.blocks == [[1, 2], [4, 5], [6, 7], [8, 9]]
+    assert pysquagg.aggregated_values == [3, 9, 13, 17]
+
+
 def test_remove():
     pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
     assert pysquagg.aggregated_values == [3, 7, 5]
