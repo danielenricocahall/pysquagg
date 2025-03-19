@@ -34,6 +34,17 @@ pysquagg_instance.pop()
 pysquagg_instance[2] = -1
 pysquagg_instance.blocks # will print [[1, 2], [-1, 4], [5, 6], [7, 8]] - block_size has dropped down from 3 -> 2
 ```
+
+## Parallel Option
+If the aggregation function is computationally heavy, there is a `parallel` flag (default: `False`) which will use the [ProcessPoolExecutor](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ProcessPoolExecutor) for Python versions below 3.13, and [ThreadPoolExecutor](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor) for Python versions which are 3.13 and above and [has free threading enabled](https://docs.python.org/3/howto/free-threading-python.html).
+```python
+from pysquagg.pysquagg import PySquagg
+
+pysquagg_instance = PySquagg([1, 2, 3, 4, 5, 6], aggregator_function=sum, parallel=True)
+# do all the same things as above, except now using the corresponding executor
+```
+
+**Note**: Extensive benchmarking has not been conducted.
 # Performance Characteristics
 
 ## Complexity
@@ -65,6 +76,5 @@ The aggregator functions need to be associative and commutative, and the data st
 - [ ] Identify if we can reduce the runtime of some operations to be sublinear
 - [ ] Perform more extensive benchmarking
 - [ ] Incorporate a mechanism for combining aggregator functions, if someone adds two `PySquagg` objects
-- [ ] Add parallelization options (likely for 3.13+ with free-threading)
 
 > 💡 Interested in contributing? Check out the [Local Development & Contributions Guide](https://github.com/danielenricocahall/pysquagg/blob/main/CONTRIBUTING.md).
