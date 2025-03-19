@@ -52,7 +52,7 @@ class PySquagg(list):
     def map_(self):
         if not self.parallel:
             return map
-        if sys.version_info.minor >= 13:
+        if sys.version_info.minor >= 13 and sys._is_gil_enabled():
             executor = ThreadPoolExecutor()
         else:
             executor = ProcessPoolExecutor()
