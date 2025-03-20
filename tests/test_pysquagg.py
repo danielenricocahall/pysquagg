@@ -15,6 +15,13 @@ def test_append():
     assert pysquagg.blocks == [[1, 2], [3, 4], [5]]
 
 
+def test_extend():
+    pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
+    pysquagg.extend([6, 7, 8, 9])
+    assert pysquagg.block_size == 3
+    assert pysquagg.aggregated_values == [6, 15, 24]
+
+
 @pytest.mark.parametrize("parallel", [True, False])
 def test_insert_no_change_to_block_size(parallel):
     pysquagg = PySquagg([1, 2, 3, 5, 6, 7], aggregator_function=sum, parallel=parallel)
