@@ -20,7 +20,11 @@ class PySquagg(list):
 
     @property
     def block_size(self):
-        return floor(sqrt(len(self)))
+        current_length = len(self)
+        if not hasattr(self, "_block_size") or self._last_len != current_length:
+            self._block_size = floor(sqrt(current_length))
+            self._last_len = current_length
+        return self._block_size
 
     @property
     def block_count(self):
