@@ -95,8 +95,10 @@ class PySquagg(list):
             self.blocks = self.compute_blocks()
         else:
             if (index := self.block_size - len(self.blocks[-1])) > 0:
+                self.aggregated_values[-1] = self.aggregator_function(
+                    [self.aggregated_values[-1], *__iterable[:index]]
+                )
                 self.blocks[-1] += __iterable[:index]
-                self.aggregated_values[-1] = self.aggregator_function(self.blocks[-1])
                 __iterable = __iterable[index:]
             self.__extend_blocks(__iterable)
 
