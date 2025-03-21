@@ -55,7 +55,7 @@ pysquagg_instance = PySquagg([1, 2, 3, 4, 5, 6], aggregator_function=sum, parall
 | `append`  | O(1)                         | O(n)           |
 | `insert`  | O(n)                         | O(n)           |
 | `pop`     | O(n)                         | O(n)           |
-| `extend` | O($\sqrt{n + m}$)            | O(n + m)       |
+| `extend` | O(m)                         | O(n + m)       |
 
 The main reason for other operations being linear in the worst case is the fact that when the collection is modified, the blocks and aggregates need to be recomputed when the square root of the size of the collection changes. Furthermore, as `PySquagg` is a subclass of list, some of these performance characteristics are inherent.
 ## Benchmarks
