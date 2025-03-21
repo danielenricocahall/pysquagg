@@ -17,6 +17,7 @@ class PySquagg(list):
         self.aggregator_function = aggregator_function
         self._blocks = self.compute_blocks()
         self.parallel = parallel
+        self._reblock_needed = False
 
     @property
     def block_size(self):
@@ -70,6 +71,15 @@ class PySquagg(list):
             for i in range(start_index, len(self), self.block_size)
         ]
 
+    def _ensure_blocks(self):
+        if self._reblock_needed:
+            self.blocks = self.compute_blocks()
+            self._reblock_needed = False
+
+    def force_reblock(self):
+        self._reblock_needed = True
+        self._ensure_blocks()
+
     def append(self, __object):
         self.extend([__object])
 
@@ -78,7 +88,7 @@ class PySquagg(list):
         super().insert(__index, __object)
         new_block_size = self.block_size
         if new_block_size != block_size:
-            self.blocks = self.compute_blocks()
+            self._reblock_needed = True
         else:
             block_index = __index // block_size
             self.blocks[block_index].insert(__index % block_size, __object)
@@ -96,7 +106,7 @@ class PySquagg(list):
         super().extend(__iterable)
         new_block_size = self.block_size
         if new_block_size != block_size:
-            self.blocks = self.compute_blocks()
+            self._reblock_needed = True
         else:
             if (index := self.block_size - len(self.blocks[-1])) > 0:
                 self.aggregated_values[-1] = self.aggregator_function(
@@ -119,7 +129,7 @@ class PySquagg(list):
         value = super().pop(__index)
         new_block_size = self.block_size
         if new_block_size != block_size:
-            self.blocks = self.compute_blocks()
+            self._reblock_needed = True
         else:
             block_index = __index // block_size
             self.blocks[block_index].pop(__index % block_size if __index >= 0 else -1)
@@ -166,10 +176,12 @@ class PySquagg(list):
             )
 
     def __iter__(self):
+        self._ensure_blocks()
         for block, agg in zip(self.blocks, self.aggregated_values):
             yield block, agg
 
     def query(self, left: int, right: int):
+        self._ensure_blocks()
         if right - left <= 0 or right > len(self) or left < 0:
             raise InvalidRangeException(
                 f"Invalid range of {left} - {right}. Please supply a valid range!"

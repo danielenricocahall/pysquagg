@@ -18,6 +18,7 @@ def test_append():
 def test_extend():
     pysquagg = PySquagg([1, 2, 3, 4, 5], aggregator_function=sum)
     pysquagg.extend([6, 7, 8, 9])
+    pysquagg.force_reblock()
     assert pysquagg.block_size == 3
     assert pysquagg.aggregated_values == [6, 15, 24]
 
@@ -40,6 +41,7 @@ def test_insert_block_size_changes(parallel):
     orig_blocks = pysquagg.blocks
     pysquagg.insert(3, 4)
     assert pysquagg.block_size == 3
+    pysquagg.force_reblock()
     assert orig_blocks != pysquagg.blocks
     assert pysquagg.blocks == [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     assert pysquagg.aggregated_values == [6, 15, 24]
@@ -101,6 +103,7 @@ def test_pop_change_block_size(parallel):
     assert pysquagg.aggregated_values == [6, 15, 24]
     val = pysquagg.pop(2)
     assert val == 3
+    pysquagg.force_reblock()
     assert pysquagg.blocks == [[1, 2], [4, 5], [6, 7], [8, 9]]
     assert pysquagg.aggregated_values == [3, 9, 13, 17]
 
