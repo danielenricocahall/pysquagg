@@ -76,5 +76,6 @@ The aggregator functions need to be associative and commutative, and the data st
 - [ ] Identify if we can reduce the runtime of some operations to be sublinear
 - [ ] Perform more extensive benchmarking
 - [ ] Incorporate a mechanism for combining aggregator functions, if someone adds two `PySquagg` objects
+- [ ] Add a `LoosePySquagg` class that does not strictly enforce the sqrt(n), which may have some performance benefits for certain operations such as `insert` and `pop` which currently require recomputation of blocks and aggregates
 
 > 💡 Interested in contributing? Check out the [Local Development & Contributions Guide](https://github.com/danielenricocahall/pysquagg/blob/main/CONTRIBUTING.md).
